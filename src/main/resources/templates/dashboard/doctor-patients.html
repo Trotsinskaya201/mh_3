@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список пациентов</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background-color: #343a40;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+        .main-content {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Боковая панель -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <h3 class="text-white text-center mb-4">Родильный дом</h3>
+                <nav>
+                    <a href="/admin" ><i class="fas fa-home"></i> Главная</a>
+                    <a href="/admin/doctor/my-appointments"><i class="fas fa-calendar-check"></i> Приемы</a>
+                    <a href="/admin/doctor/completed-appointments" class="active"><i class="fas fa-history"></i> История приемов</a>
+                    <a href="/admin/newborns"><i class="fas fa-baby"></i> Новорожденные</a>
+                    <a href="/logout"><i class="fas fa-sign-out-alt"></i> Выход</a>
+                </nav>
+            </div>
+
+            <!-- Основной контент -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Список пациентов</h2>
+                    <div class="user-info">
+                        <span sec:authentication="name"></span>
+                        <a href="/logout" class="btn btn-outline-danger ms-2">Выход</a>
+                    </div>
+                </div>
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Имя пользователя</th>
+                            <th>Полное имя</th>
+                            <th>Email</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="patient : ${patients}">
+                            <td th:text="${patient.id}"></td>
+                            <td th:text="${patient.username}"></td>
+                            <td th:text="${patient.fullName}"></td>
+                            <td th:text="${patient.email}"></td>
+                            <td>
+                                <!-- Здесь можно добавить кнопки действий, например, для создания приема -->
+                                <form th:action="@{/admin/appointments/create}" method="post" style="display:inline;">
+                                    <input type="hidden" name="patientId" th:value="${patient.id}" />
+                                    <button type="submit" class="btn btn-sm btn-primary">Записать на прием</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Maternity Hospital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8e44ad;
+            --primary-hover: #9b59b6;
+            --primary-light: #d2b4de;
+            --primary-dark: #6c3483;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+        }
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .welcome-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+        .text-primary {
+            color: var(--primary-color) !important;
+        }
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container dashboard-container">
+        <div class="welcome-section">
+            <h2 class="text-primary">Welcome, <span th:text="${user.fullName}">User</span>!</h2>
+            <p class="text-muted">Role: <span th:text="${user.role}">Role</span></p>
+        </div>
+
+        <div class="row">
+            <!-- Quick Actions Card -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a th:href="@{/appointments}" class="btn btn-primary">View Appointments</a>
+                            <a th:href="@{/profile}" class="btn btn-outline-primary">Update Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Card -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Recent Activity</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Last login: <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy HH:mm')}">Date</span></li>
+                            <li class="list-group-item">Appointments: <span th:text="${appointmentCount ?: 0}">0</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Role-specific Content -->
+        <div th:if="${user.role == 'ADMIN'}" class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Admin Controls</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <a th:href="@{/admin/users}" class="btn btn-primary w-100 mb-2">Manage Users</a>
+                            </div>
+                            <div class="col-md-4">
+                                <a th:href="@{/admin/reports}" class="btn btn-primary w-100 mb-2">View Reports</a>
+                            </div>
+                            <div class="col-md-4">
+                                <a th:href="@{/admin/settings}" class="btn btn-primary w-100 mb-2">System Settings</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${user.role == 'DOCTOR'}" class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Doctor Controls</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <a th:href="@{/doctor/patients}" class="btn btn-primary w-100 mb-2">View Patients</a>
+                            </div>
+                            <div class="col-md-4">
+                                <a th:href="@{/doctor/schedule}" class="btn btn-primary w-100 mb-2">My Schedule</a>
+                            </div>
+                            <div class="col-md-4">
+                                <a th:href="@{/doctor/records}" class="btn btn-primary w-100 mb-2">Medical Records</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${user.role == 'NURSE'}" class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Nurse Controls</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <a th:href="@{/nurse/patients}" class="btn btn-primary w-100 mb-2">Patient Care</a>
+                            </div>
+                            <div class="col-md-4">
+                                <a th:href="@{/nurse/schedule}" class="btn btn-primary w-100 mb-2">My Schedule</a>
+                            </div>
+                            <div class="col-md-4">
+                                <a th:href="@{/nurse/medications}" class="btn btn-primary w-100 mb-2">Medications</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${user.role == 'PATIENT'}" class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Patient Services</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <a th:href="@{/patient/appointments}" class="btn btn-primary w-100 mb-2">My Appointments</a>
+                            </div>
+                            <div class="col-md-4">
+                                <a th:href="@{/patient/records}" class="btn btn-primary w-100 mb-2">Medical Records</a>
+                            </div>
+                            <div class="col-md-4">
+                                <a th:href="@{/patient/messages}" class="btn btn-primary w-100 mb-2">Messages</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

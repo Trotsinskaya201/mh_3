@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список пользователей</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background-color: #343a40;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+        .main-content {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Боковая панель -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <h3 class="text-white text-center mb-4">Родильный дом</h3>
+                <nav>
+                    <a href="/admin" ><i class="fas fa-home"></i> Главная</a>
+                    <a href="/admin/users" class="active"><i class="fas fa-users"></i> Пользователи</a>
+                    <a href="/admin/newborns"><i class="fas fa-baby"></i> Новорожденные</a>
+                    <a href="/logout"><i class="fas fa-sign-out-alt"></i> Выход</a>
+                </nav>
+            </div>
+
+            <!-- Основной контент -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Список пользователей</h2>
+                    <div class="user-info">
+                        <span sec:authentication="name"></span>
+                        <a href="/logout" class="btn btn-outline-danger ms-2">Выход</a>
+                    </div>
+                </div>
+
+                <a href="/admin/users/add" class="btn btn-primary mb-3"><i class="fas fa-user-plus"></i> Добавить пользователя</a>
+
+                <div class="mb-3">
+                    <form action="/admin/users" method="get" class="form-inline">
+                        <label for="roleFilter" class="me-2">Фильтр по роли:</label>
+                        <select name="role" id="roleFilter" class="form-select-sm" onchange="this.form.submit()">
+                            <option value="">Все роли</option>
+                            <option th:each="role : ${roles}" 
+                                    th:value="${role}"
+                                    th:text="${role}"
+                                    th:selected="${selectedRole != null and selectedRole == role}">
+                            </option>
+                        </select>
+                    </form>
+                </div>
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Имя пользователя</th>
+                            <th>Полное имя</th>
+                            <th>Email</th>
+                            <th>Роль</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="user : ${users}">
+                            <td th:text="${user.id}"></td>
+                            <td th:text="${user.username}"></td>
+                            <td th:text="${user.fullName}"></td>
+                            <td th:text="${user.email}"></td>
+                            <td th:text="${user.role}"></td>
+                            <td>
+                                <!-- Здесь можно добавить кнопки действий, например, для редактирования или удаления -->
+                                <a th:href="@{/admin/users/{id}/delete(id=${user.id})}" class="btn btn-sm btn-danger" th:if="${user.role.name() != 'ADMIN'}" onclick="return confirm('Вы уверены, что хотите удалить этого пользователя?');">Удалить</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

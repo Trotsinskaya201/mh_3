@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список новорожденных</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background-color: #343a40;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+        .main-content {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Боковая панель -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <h3 class="text-white text-center mb-4">Родильный дом</h3>
+                <nav>
+                    <a href="/admin" ><i class="fas fa-home"></i> Главная</a>
+                    <a href="/admin/users"><i class="fas fa-users"></i> Пользователи</a>
+                    <a href="/admin/newborns"><i class="fas fa-baby"></i> Новорожденные</a>
+                    <a href="/logout"><i class="fas fa-sign-out-alt"></i> Выход</a>
+                </nav>
+            </div>
+
+            <!-- Основной контент -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Список новорожденных</h2>
+                    <div class="user-info">
+                        <span sec:authentication="name"></span>
+                        <a href="/logout" class="btn btn-outline-danger ms-2">Выход</a>
+                    </div>
+                </div>
+
+                <!-- Фильтр по полу -->
+                <div class="mb-3">
+                    <form action="/admin/newborns" method="get" class="form-inline">
+                        <label for="genderFilter" class="me-2">Фильтр по полу:</label>
+                        <select name="gender" id="genderFilter" class="form-select-sm" onchange="this.form.submit()">
+                            <option value="">Все</option>
+                            <option value="MALE" th:selected="${selectedGender == 'MALE'}">Мужской</option>
+                            <option value="FEMALE" th:selected="${selectedGender == 'FEMALE'}">Женский</option>
+                        </select>
+                    </form>
+                </div>
+
+                <!-- Сообщения об успехе/ошибке -->
+                <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <span th:text="${successMessage}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <span th:text="${errorMessage}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <!-- Таблица новорожденных -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Имя</th>
+                                        <th>Пол</th>
+                                        <th>Дата рождения</th>
+                                        <th>Вес (кг)</th>
+                                        <th>Рост (см)</th>
+                                        <th>Мать</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="newborn : ${newborns}">
+                                        <td th:text="${newborn.id}"></td>
+                                        <td th:text="${newborn.name}"></td>
+                                        <td th:text="${newborn.gender}"></td>
+                                        <td th:text="${#temporals.format(newborn.dateOfBirth, 'dd.MM.yyyy')}"></td>
+                                        <td th:text="${newborn.weight}"></td>
+                                        <td th:text="${newborn.height}"></td>
+                                        <td th:text="${newborn.mother.fullName}"></td>
+                                        <td>
+                                            <form th:action="@{/admin/newborns/{id}/delete(id=${newborn.id})}" method="post" style="display: inline;">
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Вы уверены, что хотите удалить этого новорожденного?')">
+                                                    <i class="fas fa-trash"></i> Удалить
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

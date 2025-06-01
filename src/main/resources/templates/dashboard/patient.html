@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель пациента</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background-color: #343a40;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .appointment-card {
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .appointment-card .card-header {
+            background-color: #f8f9fa;
+            border-bottom: none;
+        }
+        .medical-record {
+            border-left: 4px solid #0d6efd;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Боковая панель -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <h3 class="text-white text-center mb-4">Родильный дом</h3>
+                <nav>
+                    <a href="/admin" ><i class="fas fa-home"></i> Главная</a>
+                    <a href="/admin/patient/my-newborns" class="active"><i class="fas fa-baby"></i> Мои новорожденные</a>
+                    <a href="/admin/patient/my-appointments"><i class="fas fa-calendar-check"></i> Мои приемы</a>
+                    <a href="/logout"><i class="fas fa-sign-out-alt"></i> Выход</a>
+                </nav>
+            </div>
+
+            <!-- Основной контент -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Добро пожаловать, <span sec:authentication="name">Пациент</span>!</h2>
+                    <div class="user-info">
+                        <span sec:authentication="name"></span>
+                        <a href="/logout" class="btn btn-outline-danger ms-2">Выход</a>
+                    </div>
+                </div>
+
+                <!-- Быстрые действия -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="/admin/patient/doctors" class="btn btn-primary w-100">
+                            <i class="fas fa-calendar-plus"></i> Записаться на прием
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
