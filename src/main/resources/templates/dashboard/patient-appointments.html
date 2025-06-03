@@ -37,6 +37,7 @@
                     <a href="/admin" ><i class="fas fa-home"></i> Главная</a>
                     <a href="/admin/patient/my-newborns"><i class="fas fa-baby"></i> Мои новорожденные</a>
                     <a href="/admin/patient/my-appointments" class="active"><i class="fas fa-calendar-check"></i> Мои приемы</a>
+                    <a href="/admin/patient/completed-appointments"><i class="fas fa-history"></i> История приемов</a>
                     <a href="/logout"><i class="fas fa-sign-out-alt"></i> Выход</a>
                 </nav>
             </div>
@@ -61,7 +62,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="appointment : ${appointments}">
+                        <tr th:each="appointment : ${appointments}" th:if="${appointment.status != 'COMPLETED'}">
                             <td th:text="${appointment.id}"></td>
                             <td th:text="${appointment.doctor.fullName}"></td>
                             <td th:text="${appointment.status}"></td>

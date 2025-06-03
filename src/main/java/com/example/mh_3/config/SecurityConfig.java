@@ -41,6 +41,7 @@ public class SecurityConfig {
                 .requestMatchers("/admin/patient/my-appointments").hasRole("PATIENT")
                 .requestMatchers("/admin/patient").hasRole("PATIENT")
                 .requestMatchers("/admin/patient/doctors").hasRole("PATIENT")
+                .requestMatchers("/admin/patient/completed-appointments").hasRole("PATIENT")
                 .requestMatchers("/admin/newborns/add").hasAnyRole("ADMIN", "DOCTOR")
                 .requestMatchers("/admin/newborns").hasAnyRole("ADMIN", "DOCTOR")
                 .requestMatchers("/admin/newborns/{id}/delete").hasAnyRole("ADMIN", "DOCTOR")

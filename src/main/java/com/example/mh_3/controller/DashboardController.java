@@ -303,10 +303,18 @@ public class DashboardController {
 
     @GetMapping("/patient/my-appointments")
     public String listPatientAppointments(@AuthenticationPrincipal User currentUser, Model model) {
-        List<Appointment> patientAppointments = appointmentRepository.findByPatientId(currentUser.getId());
+        List<Appointment> patientAppointments = appointmentRepository.findByPatientIdAndStatusIsNot(currentUser.getId(), Appointment.AppointmentStatus.COMPLETED);
         model.addAttribute("appointments", patientAppointments);
         model.addAttribute("user", currentUser);
         return "dashboard/patient-appointments";
+    }
+
+    @GetMapping("/patient/completed-appointments")
+    public String listPatientCompletedAppointments(@AuthenticationPrincipal User currentUser, Model model) {
+        List<Appointment> completedAppointments = appointmentRepository.findByPatientIdAndStatus(currentUser.getId(), Appointment.AppointmentStatus.COMPLETED);
+        model.addAttribute("appointments", completedAppointments);
+        model.addAttribute("user", currentUser);
+        return "dashboard/patient-completed-appointments";
     }
 
     @PostMapping("/patient/appointments/create-with-doctor/{doctorId}")
